@@ -10,6 +10,16 @@ s3 = boto3.client(
 )
 
 def create_presigned_put(ext: str, mime: str) -> tuple[str, str]:
+    """
+    S3への署名付きPUT URLを生成する
+    
+    Args:
+        ext: ファイル拡張子（例: ".jpg"）
+        mime: MIMEタイプ（例: "image/jpeg"）
+        
+    Returns:
+        tuple[str, str]: (署名付きURL, オブジェクトキー) のタプル
+    """
     key = f"obs/{uuid.uuid4()}{ext}"
     url = s3.generate_presigned_url(
         "put_object",
@@ -19,6 +29,15 @@ def create_presigned_put(ext: str, mime: str) -> tuple[str, str]:
     return url, key
 
 def public_url_from_key(key: str) -> str:
+    """
+    オブジェクトキーから公開URLを生成する
+    
+    Args:
+        key: S3オブジェクトキー
+        
+    Returns:
+        str: 公開アクセス可能なURL
+    """
     # ローカルMinIO用（本番はCDNドメインを環境変数で）
     base = settings.PUBLIC_CDN_BASE or f"{settings.S3_ENDPOINT_URL}/{settings.S3_BUCKET}"
     return f"{base}/{key}"

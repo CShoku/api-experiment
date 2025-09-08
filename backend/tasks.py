@@ -10,6 +10,20 @@ celery_app = Celery("tasks", broker=broker_url, backend=broker_url)
 
 @celery_app.task(name="analyze_observation", bind=True, max_retries=3, default_retry_delay=5)
 def analyze_observation(self, obs_id: int):
+    """
+    観察記録の画像解析を実行するCeleryタスク
+    
+    Celeryワーカーから呼び出される関数で、指定された観察記録の画像を解析し、
+    検出結果、トリビア、質問を生成してデータベースに保存する。
+    最大3回までリトライ可能。
+    
+    Args:
+        self: Celeryタスクインスタンス
+        obs_id: 解析対象の観察記録ID
+        
+    Raises:
+        Exception: 解析処理中にエラーが発生した場合（リトライ可能）
+    """
     db: Session = SessionLocal()
     try:
         obs = db.get(models.Observation, obs_id)

@@ -8,6 +8,7 @@ class UploadInitReq(BaseModel):
 class UploadInitRes(BaseModel):
     url: str
     object_key: str
+    public_url: str
 
 class ObservationCreate(BaseModel):
     mediaUrl: str
