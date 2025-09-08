@@ -1,6 +1,8 @@
 from fastapi import FastAPI
 from .db import Base, engine
-from .routers import observations, upload
+from backend.routers.upload import router as upload_router
+from backend.routers.observation import router as observation_router
+from backend.routers.tasks_router import router as tasks_router
 
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -17,8 +19,9 @@ app.add_middleware(
 
 Base.metadata.create_all(bind=engine)
 
-app.include_router(upload.router)
-app.include_router(observations.router)
+app.include_router(upload_router, prefix="/upload")
+app.include_router(observation_router)
+app.include_router(tasks_router)
 
 @app.get("/health")
 def health():
