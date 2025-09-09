@@ -1,7 +1,11 @@
 import httpx
 import os
+from dotenv import load_dotenv
 import base64
 import google.generativeai as genai
+
+# .env の内容を環境変数に読み込む
+load_dotenv()
 
 genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
 
